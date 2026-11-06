@@ -340,6 +340,11 @@ def S_SWAPPC_B64 : SOP1_64 <"s_swappc_b64"
 >;
 }
 
+let isReturn = 1 in {
+// Define variant marked as return rather than call.
+def S_SWAPPC_B64_ret : SOP1_64 <"">;
+}
+
 def S_RFE_B64 : SOP1_1  <"s_rfe_b64">;
 
 let hasSideEffects = 1, Uses = [EXEC], Defs = [EXEC, SCC] in {
@@ -1258,6 +1263,15 @@ let SubtargetPredicate = isGFX9Plus in {
       (ins SOPPBrTarget:$simm16),
       "$sdst, $simm16"> {
     let isCall = 1;
+  }
+
+  // Define variant marked as a return.
+  def S_CALL_B64_ret : SOPK_Pseudo<
+      "",
+      (outs SReg_64:$sdst),
+      (ins SOPPBrTarget:$simm16),
+      "$sdst, $simm16"> {
+    let isReturn = 1;
   }
 } // End SubtargetPredicate = isGFX9Plus
 
